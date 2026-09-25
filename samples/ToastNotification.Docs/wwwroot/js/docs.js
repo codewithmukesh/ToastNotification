@@ -20,6 +20,48 @@
         }
     }
 
+    // Label table cells so they can stack as cards on small screens.
+    $$('.table-scroll table').forEach(function (table) {
+        var labels = $$('thead th', table).map(function (th) { return th.textContent.trim(); });
+        $$('tbody tr', table).forEach(function (row) {
+            $$('td', row).forEach(function (cell, i) { if (labels[i]) { cell.setAttribute('data-label', labels[i]); } });
+        });
+    });
+
+    // ------------------------------------------------------------------
+    // Theme toggle (light by default, remembers your choice)
+    // ------------------------------------------------------------------
+    var root = document.documentElement;
+    try {
+        var savedTheme = localStorage.getItem('toast-docs-theme');
+        if (savedTheme) { root.setAttribute('data-theme', savedTheme); }
+    } catch (e) { /* storage blocked */ }
+    var themeToggle = $('.theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function () {
+            var current = root.getAttribute('data-theme') || 'light';
+            var next = current === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            try { localStorage.setItem('toast-docs-theme', next); } catch (e) { /* storage blocked */ }
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // Mobile menu
+    // ------------------------------------------------------------------
+    var nav = $('.nav');
+    var navToggle = $('.nav-toggle');
+    if (nav && navToggle) {
+        var setMenu = function (open) {
+            nav.classList.toggle('is-open', open);
+            navToggle.setAttribute('aria-expanded', String(open));
+            navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        };
+        navToggle.addEventListener('click', function () { setMenu(!nav.classList.contains('is-open')); });
+        $$('.nav-links a').forEach(function (link) { link.addEventListener('click', function () { setMenu(false); }); });
+        document.addEventListener('keydown', function (event) { if (event.key === 'Escape') { setMenu(false); } });
+    }
+
     // ------------------------------------------------------------------
     // Docs library toggle: switches snippets, tables, forms and "Try" buttons
     // ------------------------------------------------------------------
@@ -81,7 +123,7 @@
             { call: svc + '.Error("Payment failed.");', text: 'Payment failed.', color: '#dc2626', icon: '✕' },
             { call: svc + '.Warning("Stock is running low.");', text: 'Stock is running low.', color: '#d97706', icon: '!' },
             { call: svc + '.Information("Shipping starts Monday.");', text: 'Shipping starts Monday.', color: '#0284c7', icon: 'i' },
-            { call: svc + '.Custom("Deployed to production", 5, "#8b6cff");', text: 'Deployed to production', color: '#7c5cff', icon: '↑' }
+            { call: svc + '.Custom("Deployed to production", 5, "#4c33d8");', text: 'Deployed to production', color: '#4c33d8', icon: '↑' }
         ];
         var index = 0;
 
@@ -126,7 +168,7 @@
     // ------------------------------------------------------------------
     var pg = $('#pg-controls');
     if (pg) {
-        var state = { library: 'notyf', type: 'Success', message: 'Order placed!', duration: null, color: '#8b6cff' };
+        var state = { library: 'notyf', type: 'Success', message: 'Order placed!', duration: null, color: '#4c33d8' };
         var codeEl = $('#pg-code');
         var messageInput = $('#pg-message');
         var colorField = $('#pg-color-field');

@@ -131,7 +131,7 @@ public static class Snippets
             notyf.Error("Payment failed.");
             notyf.Warning("Stock is running low.");
             notyf.Information("Shipping starts Monday.");
-            notyf.Custom("Deployed to production", 5, "#8b6cff", "fa fa-bolt");
+            notyf.Custom("Deployed to production", 5, "#4c33d8", "fa fa-bolt");
             """),
         new("toastify-types", "Any controller, page or endpoint", "csharp",
             """

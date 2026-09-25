@@ -6,14 +6,13 @@
 
 <main class="container section">
     <div class="section-head">
-        <span class="kicker">Razor Pages example</span>
-        <h2>A real page, a real form.</h2>
-        <p>This page uses <code>IToastifyService</code> in its page model. Submit it empty to see <code>Page()</code>, or with a name to see a redirect.</p>
+        <h2>Razor Pages example</h2>
+        <p>This is a real Razor Page. Its page model uses <code>IToastifyService</code>. Submit the form empty to see an error toast from <code>Page()</code>, or enter a name to see a success toast after a redirect.</p>
     </div>
 
     <div class="checkout">
         <form method="post" class="panel checkout-form">
-            <label for="name" class="label">YOUR NAME</label>
+            <label for="name" class="label">Your name</label>
             <input class="input" id="name" asp-for="Name" placeholder="Jane Doe" autocomplete="off" />
             <button class="btn btn-primary" type="submit">Place order</button>
             <a class="back" href="/#razor-pages">← Back to the docs</a>

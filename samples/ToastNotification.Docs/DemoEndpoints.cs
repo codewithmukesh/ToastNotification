@@ -20,7 +20,7 @@ public static class DemoEndpoints
             // The message comes from the playground input, i.e. user input - encode it.
             var message = HtmlEncoder.Default.Encode(string.IsNullOrWhiteSpace(request.Message) ? DefaultMessage(request.Type) : request.Message);
             var duration = request.Duration is >= 0 and <= 60 ? request.Duration : null;
-            var color = IsSafeColor(request.Color) ? request.Color : "#8b6cff";
+            var color = IsSafeColor(request.Color) ? request.Color : "#4c33d8";
 
             Raise(request.Library, request.Type, message, duration, color, notyf, toastify);
             return Results.NoContent();
@@ -55,7 +55,7 @@ public static class DemoEndpoints
                 case "Error": toastify.Error(message, duration); break;
                 case "Warning": toastify.Warning(message, duration); break;
                 case "Information": toastify.Information(message, duration); break;
-                default: toastify.Custom(message, duration, color ?? "#8b6cff"); break;
+                default: toastify.Custom(message, duration, color ?? "#4c33d8"); break;
             }
             return;
         }
@@ -66,7 +66,7 @@ public static class DemoEndpoints
             case "Error": notyf.Error(message, duration); break;
             case "Warning": notyf.Warning(message, duration); break;
             case "Information": notyf.Information(message, duration); break;
-            default: notyf.Custom(message, duration, color ?? "#8b6cff", "fa fa-bolt"); break;
+            default: notyf.Custom(message, duration, color ?? "#4c33d8", "fa fa-bolt"); break;
         }
     }
 

@@ -7,19 +7,25 @@
 <main>
     @* ---------------------------------------------------------------- HERO *@
     <section class="container hero">
-        <span class="tag"><b>v2.0</b> Now on .NET 8 &amp; .NET 10 · no jQuery · CSP-friendly</span>
-        <h1>Toasts, straight from <em>C#.</em></h1>
-        <p class="lede">
-            Call <code>notyf.Success("Saved!")</code> in a controller and the toast shows up on the page -
-            after a redirect, a form post, a <code>fetch</code> call, jQuery or htmx. Three lines of setup.
-        </p>
-        <div class="hero-cta">
-            <div class="install">
-                <span class="prompt">$</span>
-                <code id="code-hero-install">dotnet add package AspNetCoreHero.ToastNotification</code>
-                <button class="copy" type="button" data-copy="code-hero-install">copy</button>
+        <div class="hero-copy">
+            <span class="tag"><b>v2.0</b> Works with .NET 8 and .NET 10</span>
+            <h1>Toast notifications for ASP.NET Core, <span class="accent">straight from C#</span></h1>
+            <p class="lede">
+                I built this package so you can show a toast with one line of C#. Call <code>notyf.Success("Saved!")</code>
+                in your controller and the toast shows up on the page. It works after a redirect, after a form post,
+                and on <code>fetch</code>, jQuery and htmx calls. You don't need jQuery, and there's no inline JavaScript.
+            </p>
+            <div class="hero-cta">
+                <div class="install">
+                    <span class="prompt">$</span>
+                    <code id="code-hero-install">dotnet add package AspNetCoreHero.ToastNotification</code>
+                    <button class="copy" type="button" data-copy="code-hero-install">copy</button>
+                </div>
             </div>
-            <a class="btn btn-primary" href="#playground">Try the playground</a>
+            <div class="hero-cta hero-buttons">
+                <a class="btn btn-primary" href="#playground">Try it below</a>
+                <a class="btn" href="#docs">Read the docs</a>
+            </div>
         </div>
 
         <div class="stage" aria-hidden="true">
@@ -37,7 +43,7 @@
 }</pre>
             </div>
             <div class="browser">
-                <div class="window-bar"><i></i><i></i><i></i><div class="url">localhost:5001/orders</div></div>
+                <div class="window-bar"><i></i><i></i><i></i><div class="url">localhost:5000/orders</div></div>
                 <div class="skeleton">
                     <div></div><div></div><div></div>
                     <div class="row"><span></span><span></span><span></span></div>
@@ -47,75 +53,39 @@
         </div>
     </section>
 
-    @* ---------------------------------------------------------------- FEATURES *@
-    <section class="container section reveal" id="features">
+    @* ---------------------------------------------------------------- WHAT YOU GET *@
+    <section class="container section is-shaded" id="features">
         <div class="section-head">
-            <span class="kicker">Why this package</span>
-            <h2>Everything a toast should do. Nothing you have to wire up.</h2>
-            <p>Raise it on the server, it shows up in the browser - whatever way the request got there.</p>
+            <h2>What you get</h2>
+            <p>Here's what v2 does out of the box.</p>
         </div>
-        <div class="features">
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h12M12 6l6 6-6 6" /></svg>
-                <h3>Survives redirects</h3>
-                <p>Toasts ride along in TempData, so Post-Redirect-Get just works.</p>
-            </div>
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10H7z" /><path d="M3 12h4M17 12h4M12 3v4M12 17v4" /></svg>
-                <h3>fetch, jQuery &amp; htmx</h3>
-                <p>AJAX responses carry their toasts in a header. Shown automatically.</p>
-            </div>
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" /></svg>
-                <h3>CSP-friendly</h3>
-                <p>No inline JavaScript. Works with <code>script-src 'self'</code>.</p>
-            </div>
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M8 12h8" /></svg>
-                <h3>No jQuery</h3>
-                <p>Plain JavaScript. Drop the component anywhere before <code>&lt;/body&gt;</code>.</p>
-            </div>
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18" /></svg>
-                <h3>MVC, Pages, APIs</h3>
-                <p>Inject one service in controllers, page models or Minimal API handlers.</p>
-            </div>
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2" /></svg>
-                <h3>Fully themeable</h3>
-                <p>Colours, icons and CSS classes per type. Eight positions. RTL.</p>
-            </div>
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5l3 2" /><circle cx="12" cy="12" r="9" /></svg>
-                <h3>Sticky toasts</h3>
-                <p>Pass <code>0</code> and the toast stays until the user closes it.</p>
-            </div>
-            <div class="feature">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4" /><rect x="3" y="3" width="18" height="18" rx="4" /></svg>
-                <h3>Tested for real</h3>
-                <p>Unit, integration and browser tests on .NET 8 and .NET 10.</p>
-            </div>
-        </div>
+        <ul class="facts">
+            <li><strong>Toasts survive redirects</strong>They're kept in TempData, so they still show up after <code>RedirectToAction</code>.</li>
+            <li><strong>fetch, jQuery and htmx just work</strong>Call an endpoint from JavaScript and the toast comes back with the response. There's nothing to wire up.</li>
+            <li><strong>No jQuery</strong>v1 needed jQuery on the page. v2 is plain JavaScript, so you can drop it anywhere before <code>&lt;/body&gt;</code>.</li>
+            <li><strong>Works with a strict CSP</strong>There are no inline scripts, so <code>script-src 'self'</code> is fine. Using nonces? You can pass one in.</li>
+            <li><strong>MVC, Razor Pages and Minimal APIs</strong>Inject <code>INotyfService</code> or <code>IToastifyService</code> wherever you handle the request.</li>
+            <li><strong>Easy to style</strong>Set colours, icons and CSS classes per type, pick one of eight positions, or switch to right-to-left.</li>
+        </ul>
     </section>
 
     @* ---------------------------------------------------------------- PLAYGROUND *@
-    <section class="container section reveal" id="playground">
+    <section class="container section" id="playground">
         <div class="section-head">
-            <span class="kicker">Playground</span>
-            <h2>Build a toast. Fire it from the server.</h2>
-            <p>Every change updates the C# on the right. Hit fire and this app's server raises the real toast.</p>
+            <h2>Try it right here</h2>
+            <p>Pick a type, write a message and hit Fire. This page's server raises the toast with the same C# you see on the right.</p>
         </div>
         <div class="panel playground" id="pg-root">
             <div class="controls" id="pg-controls">
                 <div class="field">
-                    <span class="label">LIBRARY</span>
+                    <span class="label">Library</span>
                     <div class="seg" data-pg="library">
                         <button type="button" data-value="notyf" aria-pressed="true">Notyf</button>
                         <button type="button" data-value="toastify" aria-pressed="false">Toastify</button>
                     </div>
                 </div>
                 <div class="field">
-                    <span class="label">TYPE</span>
+                    <span class="label">Type</span>
                     <div class="seg" data-pg="type">
                         <button type="button" data-value="Success" aria-pressed="true">Success</button>
                         <button type="button" data-value="Error" aria-pressed="false">Error</button>
@@ -125,11 +95,11 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label for="pg-message">MESSAGE</label>
+                    <label for="pg-message">Message</label>
                     <input class="input" id="pg-message" type="text" value="Order placed!" maxlength="120" autocomplete="off" />
                 </div>
                 <div class="field">
-                    <span class="label">DURATION</span>
+                    <span class="label">Duration</span>
                     <div class="seg" data-pg="duration">
                         <button type="button" data-value="" aria-pressed="true">Default</button>
                         <button type="button" data-value="2" aria-pressed="false">2s</button>
@@ -138,13 +108,13 @@
                     </div>
                 </div>
                 <div class="field is-hidden" id="pg-color-field">
-                    <span class="label">COLOUR</span>
+                    <span class="label">Colour</span>
                     <div class="swatches" data-pg="color">
-                        <button type="button" data-value="#8b6cff" aria-pressed="true" style="background:#8b6cff" aria-label="Violet"></button>
-                        <button type="button" data-value="#0ea5e9" aria-pressed="false" style="background:#0ea5e9" aria-label="Sky"></button>
-                        <button type="button" data-value="#f43f5e" aria-pressed="false" style="background:#f43f5e" aria-label="Rose"></button>
-                        <button type="button" data-value="#10b981" aria-pressed="false" style="background:#10b981" aria-label="Emerald"></button>
-                        <button type="button" data-value="#f5f5f5" aria-pressed="false" style="background:#f5f5f5" aria-label="White"></button>
+                        <button type="button" data-value="#4c33d8" aria-pressed="true" style="background:#4c33d8" aria-label="Purple"></button>
+                        <button type="button" data-value="#e8a54b" aria-pressed="false" style="background:#e8a54b" aria-label="Saffron"></button>
+                        <button type="button" data-value="#2b6cb8" aria-pressed="false" style="background:#2b6cb8" aria-label="Blue"></button>
+                        <button type="button" data-value="#1a7a3a" aria-pressed="false" style="background:#1a7a3a" aria-label="Green"></button>
+                        <button type="button" data-value="#1a1814" aria-pressed="false" style="background:#1a1814" aria-label="Ink"></button>
                     </div>
                 </div>
             </div>
@@ -152,28 +122,23 @@
                 <div class="code-head"><span>OrdersController.cs</span><button class="copy" type="button" data-copy="pg-code">copy</button></div>
                 <pre><code id="pg-code" class="language-csharp"></code></pre>
                 <div class="fire">
-                    <p>POST /demo/toast → the server calls the service → the toast comes back in a response header.</p>
-                    <button class="btn btn-primary" id="pg-fire" type="button">Fire toast ↗</button>
+                    <p>The button calls <code>POST /demo/toast</code>. The server raises the toast and it comes back in a response header.</p>
+                    <button class="btn btn-primary" id="pg-fire" type="button">Fire</button>
                 </div>
             </div>
         </div>
     </section>
 
     @* ---------------------------------------------------------------- COMPARE *@
-    <section class="container section reveal" id="compare">
+    <section class="container section is-shaded" id="compare">
         <div class="section-head">
-            <span class="kicker">Two libraries, one API</span>
-            <h2>Notyf or Toastify? Try both.</h2>
-            <p>Same methods, same setup. Pick the one that fits your app's look - you can switch with a one-line change.</p>
+            <h2>Notyf or Toastify?</h2>
+            <p>The package wraps two JavaScript libraries. The C# API is the same for both, so you can switch later with a one-line change. Try each one and pick the look you like.</p>
         </div>
         <div class="compare">
             <div class="panel lib">
                 <div class="lib-head"><h3>Notyf</h3><code>INotyfService</code></div>
-                <ul>
-                    <li>Built-in icons and a ripple animation</li>
-                    <li>Eight positions, including full width</li>
-                    <li>Screen-reader announcements built in</li>
-                </ul>
+                <p>Comes with icons, a ripple effect and eight positions, including full width. It also announces each toast to screen readers.</p>
                 <div class="lib-buttons">
                     <button class="btn btn-sm" type="button" data-fire="notyf:Success"><span class="dot" style="background:var(--ok)"></span>Success</button>
                     <button class="btn btn-sm" type="button" data-fire="notyf:Error"><span class="dot" style="background:var(--err)"></span>Error</button>
@@ -184,11 +149,7 @@
             </div>
             <div class="panel lib">
                 <div class="lib-head"><h3>Toastify</h3><code>IToastifyService</code></div>
-                <ul>
-                    <li>Flat, minimal look</li>
-                    <li>Any CSS background - gradients too</li>
-                    <li>Top or bottom, left or right</li>
-                </ul>
+                <p>Flat and minimal. It takes any CSS background, gradients included, and sits at the top or bottom, on the left or right.</p>
                 <div class="lib-buttons">
                     <button class="btn btn-sm" type="button" data-fire="toastify:Success"><span class="dot" style="background:var(--ok)"></span>Success</button>
                     <button class="btn btn-sm" type="button" data-fire="toastify:Error"><span class="dot" style="background:var(--err)"></span>Error</button>
@@ -201,11 +162,10 @@
     </section>
 
     @* ---------------------------------------------------------------- SETUP WIZARD *@
-    <section class="container section reveal" id="setup">
+    <section class="container section" id="setup">
         <div class="section-head">
-            <span class="kicker">Setup</span>
-            <h2>Your exact setup, in four steps.</h2>
-            <p>Pick your project type and library. Copy, paste, done.</p>
+            <h2>Set it up in your project</h2>
+            <p>Pick your project type and library to get the exact code. It takes four steps.</p>
         </div>
         <div id="wizard">
             <div class="wizard-bar">
@@ -224,11 +184,10 @@
     </section>
 
     @* ---------------------------------------------------------------- DOCS *@
-    <section class="container section" id="docs">
+    <section class="container section is-shaded" id="docs">
         <div class="section-head">
-            <span class="kicker">Docs</span>
-            <h2>The details.</h2>
-            <p>Everything else you might need - each part with a button to try it.</p>
+            <h2>Docs</h2>
+            <p>Everything else, one topic at a time. Each section has a button so you can see it working.</p>
         </div>
 
         <div class="docs">
@@ -247,7 +206,7 @@
 
             <div>
                 <div class="docs-toggle">
-                    <span>Show code and demos for</span>
+                    <span>Show code for</span>
                     <div class="seg" data-docs-lib>
                         <button type="button" data-value="notyf" aria-pressed="true">Notyf</button>
                         <button type="button" data-value="toastify" aria-pressed="false">Toastify</button>
@@ -259,7 +218,7 @@
                     <p>Four built-in styles plus <code>Custom</code> for your own colour (and, with Notyf, an icon).</p>
                     <partial name="_CodePair" model="Snippets.Types" />
                     <div class="try">
-                        <span class="try-label">TRY</span>
+                        <span class="try-label">Try it:</span>
                         <button class="btn btn-sm" type="button" data-fire="@@:Success">Success</button>
                         <button class="btn btn-sm" type="button" data-fire="@@:Error">Error</button>
                         <button class="btn btn-sm" type="button" data-fire="@@:Warning">Warning</button>
@@ -273,7 +232,7 @@
                     <p>Pass a duration in seconds. Leave it out for the global default. Pass <code>0</code> and it stays until closed - sticky toasts always get a close button.</p>
                     <partial name="_CodePair" model="Snippets.Duration" />
                     <div class="try">
-                        <span class="try-label">TRY</span>
+                        <span class="try-label">Try it:</span>
                         <button class="btn btn-sm" type="button" data-fire="@@:Success" data-duration="2" data-message="Gone in 2 seconds.">2 seconds</button>
                         <button class="btn btn-sm" type="button" data-fire="@@:Warning" data-message="Uses the global default.">Default</button>
                         <button class="btn btn-sm" type="button" data-fire="@@:Error" data-duration="0" data-message="Stays until you close it.">Sticky</button>
@@ -285,7 +244,7 @@
                     <p>Toasts are stored in TempData, so Post-Redirect-Get just works. Returning the view straight from a POST works too.</p>
                     <partial name="_CodePair" model="Snippets.Redirect" />
                     <div class="try">
-                        <span class="try-label">TRY</span>
+                        <span class="try-label">Try it:</span>
                         <form method="post" asp-controller="Demo" asp-action="Save">
                             <input type="hidden" name="library" value="notyf" data-lib-input />
                             <button class="btn btn-sm" type="submit">POST, then redirect</button>
@@ -303,7 +262,7 @@
                     <partial name="_Code" model="Snippets.Fetch" />
                     <partial name="_Code" model="Snippets.Htmx" />
                     <div class="try">
-                        <span class="try-label">TRY</span>
+                        <span class="try-label">Try it:</span>
                         <button class="btn btn-sm" type="button" data-fetch="/demo/archive?client=fetch">fetch()</button>
                         <button class="btn btn-sm" type="button" data-jquery="/demo/archive?client=jQuery">jQuery</button>
                         <button class="btn btn-sm" type="button" id="htmx-demo" hx-post="/demo/htmx" hx-target="#htmx-out">htmx</button>
@@ -323,7 +282,7 @@
                     <p>Inject the service into your page model and call it from a handler. <code>Page()</code> and <code>RedirectToPage()</code> both work. This app has a real one - open it and submit the form.</p>
                     <partial name="_Code" model="Snippets.CheckoutPage" />
                     <div class="try">
-                        <span class="try-label">TRY</span>
+                        <span class="try-label">Try it:</span>
                         <a class="btn btn-sm" href="/checkout">Open the Razor Pages example →</a>
                     </div>
                 </article>
@@ -333,7 +292,7 @@
                     <p>Colours, CSS classes and placement - per type or for every toast.</p>
                     <partial name="_CodePair" model="Snippets.Customize" />
                     <div data-lib="notyf">
-                        <table>
+                        <div class="table-scroll"><table>
                             <thead><tr><th>SETTING</th><th>DEFAULT</th><th>WHAT IT DOES</th></tr></thead>
                             <tbody>
                                 <tr><td><code>DurationInSeconds</code></td><td>5</td><td>Default duration for every toast.</td></tr>
@@ -346,10 +305,10 @@
                                 <tr><td><code>IncludeFontAwesome</code></td><td>true</td><td>Loads Font Awesome 4.7 for the icons. Turn off if you bring your own.</td></tr>
                                 <tr><td><code>AutoHandleAjax</code></td><td>true</td><td>Shows toasts from fetch / XHR / htmx responses automatically.</td></tr>
                             </tbody>
-                        </table>
+                        </table></div>
                     </div>
                     <div data-lib="toastify" class="is-hidden">
-                        <table>
+                        <div class="table-scroll"><table>
                             <thead><tr><th>SETTING</th><th>DEFAULT</th><th>WHAT IT DOES</th></tr></thead>
                             <tbody>
                                 <tr><td><code>DurationInSeconds</code></td><td>5</td><td>Default duration for every toast.</td></tr>
@@ -360,7 +319,7 @@
                                 <tr><td><code>Success</code> … <code>Custom</code></td><td>v1 colours</td><td><code>BackgroundColor</code> and <code>ClassName</code> per type.</td></tr>
                                 <tr><td><code>AutoHandleAjax</code></td><td>true</td><td>Shows toasts from fetch / XHR / htmx responses automatically.</td></tr>
                             </tbody>
-                        </table>
+                        </table></div>
                     </div>
                 </article>
 
@@ -375,7 +334,7 @@
                 <article class="doc" id="troubleshooting">
                     <h2>Troubleshooting</h2>
                     <p>The handful of things that trip people up.</p>
-                    <table>
+                    <div class="table-scroll"><table>
                         <thead><tr><th>SYMPTOM</th><th>CAUSE</th><th>FIX</th></tr></thead>
                         <tbody>
                             <tr><td>404 on <code>/_content/AspNetCoreHero.ToastNotification/…</code></td><td>Unpublished app running outside Development - static web assets are off.</td><td>Publish the app, or call <code>builder.WebHost.UseStaticWebAssets()</code>.</td></tr>
@@ -384,22 +343,22 @@
                             <tr><td>Razor Pages POST returns 400</td><td>Razor Pages validates the antiforgery token on every POST.</td><td>Send the <code>RequestVerificationToken</code> header with fetch, or use a Minimal API endpoint.</td></tr>
                             <tr><td>Notyf Warning / Info icons missing</td><td><code>IncludeFontAwesome = false</code> without your own icon font.</td><td>Load Font Awesome, or set <code>IconClassName</code> per type.</td></tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <partial name="_Code" model="Snippets.StaticAssets" />
                 </article>
             </div>
         </div>
 
         <div class="cta">
-            <h2>Ship your first toast in two minutes.</h2>
-            <p>One package, three lines, works everywhere your requests go.</p>
+            <h2>Install it and try it in your own app</h2>
+            <p>It's one NuGet package and three lines of setup. If you run into a problem or have an idea, open an issue on GitHub. Happy Coding :)</p>
             <div class="hero-cta">
                 <div class="install">
                     <span class="prompt">$</span>
                     <code id="code-cta-install">dotnet add package AspNetCoreHero.ToastNotification</code>
                     <button class="copy" type="button" data-copy="code-cta-install">copy</button>
                 </div>
-                <a class="btn" href="https://github.com/codewithmukesh/ToastNotification">Star on GitHub</a>
+                <a class="btn" href="https://github.com/codewithmukesh/ToastNotification">Open GitHub</a>
             </div>
         </div>
     </section>
