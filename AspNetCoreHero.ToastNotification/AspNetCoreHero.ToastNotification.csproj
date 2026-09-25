@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Mukesh Murugan</Authors>
-    <Company>aspnetcorehero</Company>
+    <Company>codewithmukesh</Company>
     <Product>AspNetCoreHero.ToastNotification</Product>
     <Description>Elegant Toast Notifications for ASP.NET Core Applications. Compatilble with ASP.NET Core 3.1 and .NET 5.</Description>
     <Copyright>2020</Copyright>
@@ -15,8 +15,8 @@
     <FileVersion>1.1.0</FileVersion>
     <Version>1.1.0</Version>
     <PackageIcon>logo-transparent.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/aspnetcorehero/ToastNotification</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/aspnetcorehero/ToastNotification</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/codewithmukesh/ToastNotification</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/codewithmukesh/ToastNotification</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
