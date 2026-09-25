@@ -1,0 +1,22 @@
+@page
+@model CheckoutModel
+@{
+    ViewData["Title"] = "Razor Pages example";
+}
+
+<main class="container section">
+    <div class="section-head">
+        <h2>Razor Pages example</h2>
+        <p>This is a real Razor Page. Its page model uses <code>IToastifyService</code>. Submit the form empty to see an error toast from <code>Page()</code>, or enter a name to see a success toast after a redirect.</p>
+    </div>
+
+    <div class="checkout">
+        <form method="post" class="panel checkout-form">
+            <label for="name" class="label">Your name</label>
+            <input class="input" id="name" asp-for="Name" placeholder="Jane Doe" autocomplete="off" />
+            <button class="btn btn-primary" type="submit">Place order</button>
+            <a class="back" href="/#razor-pages">← Back to the docs</a>
+        </form>
+        <partial name="_Code" model="Snippets.CheckoutPage" />
+    </div>
+</main>

@@ -1,201 +1,283 @@
-﻿# ToastNotification - Elegant Notifications For ASP.NET Core Applications
+# ToastNotification for ASP.NET Core
 
-ToastNotification is a Minimal & Elegant Toast Notification Package for ASP.NET Core Web Applications that can be invoked via C#. Compatilble with ASP.NET Core 3.1 and .NET 5.
+[![NuGet](https://img.shields.io/nuget/v/AspNetCoreHero.ToastNotification.svg)](https://www.nuget.org/packages/AspNetCoreHero.ToastNotification)
+[![Downloads](https://img.shields.io/nuget/dt/AspNetCoreHero.ToastNotification.svg)](https://www.nuget.org/packages/AspNetCoreHero.ToastNotification)
+[![Build](https://github.com/codewithmukesh/ToastNotification/actions/workflows/ci.yml/badge.svg)](https://github.com/codewithmukesh/ToastNotification/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Features
+Toast notifications for ASP.NET Core MVC and Razor Pages - straight from your C# code.
 
-- 📱 Elegant & Responsive
-- 🐣 Global Configuration to Set the Toast Position, Duration.
-- 🎸 Easily integration with ASP.NET Core 3.1 and .NET 5 Applications.
-- 🎃 Support to render custom HTML content within the toasts
-- 🐣 Simple and Customizable. Create your own custom toast with your favorite color and icons with ease!
-- 👴🏽 Works with TempData internally.
-- 📱 Currently Supports 2 Popuplar JS Library.
-- 📱 Supports AJAX / XHR out of the box.
-
-More Features Coming Soon.
-> Not Compatible with Blazor SDK. Intended only for ASP.NET Core Web Applications.
-
-## Installation
-
+```csharp
+_notyf.Success("Order placed!");
 ```
-Install-Package AspNetCoreHero.ToastNotification
-```
-Or
 
-```
+That's it. The toast shows up on the page, whether you redirect, return a view, or call the endpoint with `fetch`, jQuery or htmx.
+
+- ✅ .NET 8 and .NET 10
+- ✅ MVC, Razor Pages and Minimal APIs
+- ✅ Works after redirects (TempData), form posts, `fetch`, jQuery AJAX and htmx
+- ✅ No jQuery required
+- ✅ No inline scripts - works with a strict Content Security Policy
+- ✅ Two JS libraries to pick from: [Notyf](https://github.com/caroso1222/notyf) and [Toastify](https://github.com/apvarun/toastify-js)
+- ✅ Custom colours, icons, CSS classes, positions, RTL and sticky toasts
+
+## Getting Started
+
+### 1. Install the package
+
+```bash
 dotnet add package AspNetCoreHero.ToastNotification
 ```
 
-Or
-
-Get it directly from NuGet - https://www.nuget.org/packages/AspNetCoreHero.ToastNotification/
-
-
-As mentioned earlier, this project / package is an ASP.NET Core Abstraction of popular Javascript libraries that are responsible for toast notifications. Currently, 2 popuplar libraries are abstracted , Notyf and ToastifyJs. You can choose to use either of them based on their look and feel. Follow the guide below for each of the toast notification library. Cheers!
-
-# Notyf
-
-## Usage - Notyf
-
-Once the package is installed, open your Startup.cs and add in the following to the ConfigureServices method.
+### 2. Register it in `Program.cs`
 
 ```csharp
-services.AddNotyf(config=> { config.DurationInSeconds = 10;config.IsDismissable = true;config.Position = NotyfPosition.BottomRight; });
+builder.Services.AddNotyf();
+
+var app = builder.Build();
+
+app.UseStaticFiles();
+app.UseRouting();
+app.UseNotyf(); // shows toasts raised during fetch / AJAX / htmx calls
 ```
 
-> Available Positions are TopRight,BottomRight,BottomLeft,TopLeft,TopCenter,BottomCenter.
-Set the isDismissible bool to false, to remove the close icon from your toasts! Pretty handy.
+You don't need any extra `using` lines for these two.
 
-### From v1.1.0 - AJAX / XHR is fully supported
+### 3. Add one line to your layout
 
-To enable toast notification while working with AJAX Requests, you will have to add the middleware into the Service Container. Open up Startup.cs and add the following line of code under the Configure method.
+Open `Views/Shared/_Layout.cshtml` (or `Pages/Shared/_Layout.cshtml`) and add this just before `</body>`:
+
+```cshtml
+@await Component.InvokeAsync("Notyf")
+```
+
+### 4. Show a toast
+
+Inject `INotyfService` and call it:
 
 ```csharp
-app.UseNotyf();
-```
-
-> More settings will be added in the upcoming releases
-
-Next, open up your _Layout.cshml file and add in the following
-
-```
- @await Component.InvokeAsync("Notyf")
-```
-> Make sure that you add this line after loading jquery. It is usually ideal to place this code below the essential scripts and above the  @await RenderSectionAsync("Scripts", required: false) line.
-
-Let's add the Constructor Injection. Add the following in your controllers / razor classes to invoke the toast notifications as required.
-
-```
-public INotyfService _notifyService { get; }
-public HomeController( INotyfService notifyService)
+public class OrdersController(INotyfService notyf) : Controller
 {
-    _notifyService = notifyService;
+    [HttpPost]
+    public IActionResult Create(CreateOrderRequest request)
+    {
+        // save the order...
+        notyf.Success("Order placed!");
+        return RedirectToAction(nameof(Index));
+    }
 }
 ```
-Once the Injection is done, you can call the toast notification as you need. Currently 5 Types are supported.
 
-### Success
-```csharp
-_notifyService.Success("This is a Success Notification");
-```
+Run the app and you'll see the toast after the redirect. That's the whole setup.
 
-### Error
-```csharp
-_notifyService.Error("This is an Error Notification");
-```
-
-### Warning
-```csharp
-_notifyService.Warning("This is a Warning Notification");
-```
-
-### Information
-```csharp
-_notifyService.Information("This is an Information Notification");
-```
-#### Set Toast Duration
-By default, the toast gets dismissed in 5 seconds. You can set the duration(in seconds) after which the toast will be dismissed.
-```csharp
-_notifyService.Success("This toast will be dismissed in 10 seconds.",10);
-```
-## Custom
-As the previous 4 Modes are very static in terms of color and icon, I have added a 5th type that let's you customize everything.
+## Notification Types
 
 ```csharp
-_notifyService.Custom("Custom Notification - closes in 5 seconds.", 5, "whitesmoke", "fa fa-gear");
-_notifyService.Custom("Custom Notification - closes in 5 seconds.", 10, "#135224", "fa fa-gear");
-            
+notyf.Success("Order placed!");
+notyf.Error("Payment failed.");
+notyf.Warning("Stock is running low.");
+notyf.Information("Shipping starts Monday.");
+notyf.Custom("Deployed to production", 5, "#5b30d6", "fa fa-rocket");
 ```
-Here, you add the class of the icon as required. Font Awesome icons are supported by default. You would just have to pass the icon class name. The color of the text and icon is automatically set based on the color of the notification. Supports HEXR Color Codes too!
 
-## Demo - Notyf
-
-A Demo Implementation using ASP.NET Core MVC can be found here - https://github.com/codewithmukesh/ToastNotification/tree/master/ToastNotification.Notyf
-
-# Toastify-Js
-
-## Usage 
-
-Once the package is installed, open your Startup.cs and add in the following to the ConfigureServices method.
+## Duration and Sticky Toasts
 
 ```csharp
-services.AddToastify(config=> { config.DurationInSeconds = 1000; config.Position = Position.Right; config.Gravity = Gravity.Bottom; });
+notyf.Success("Gone in 2 seconds", 2);      // duration in seconds
+notyf.Warning("Uses the global default");    // null = the DurationInSeconds you configured
+notyf.Error("Stays until you close it", 0);  // 0 = sticky
 ```
 
-> Available Positions are Right and Left.
-> Available Gravity is Top and Bottom
+Sticky toasts always get a close button.
 
+## AJAX, fetch and htmx
 
-> More settings will be added in the upcoming releases
+This works out of the box once `app.UseNotyf()` is in place. Raise the toast in your endpoint as usual:
 
-Next, open up your _Layout.cshml file and add in the following
-
-```
- @await Component.InvokeAsync("Toastify")
-```
-> Make sure that you add this line after loading jquery. It is usually ideal to place this code below the essential scripts and above the  @await RenderSectionAsync("Scripts", required: false) line.
-
-Let's add the Constructor Injection. Add the following in your controllers / razor classes to invoke the toast notifications as required.
-
-```
-public IToastifyService _notifyService { get; }
-public HomeController( IToastifyService notifyService)
+```csharp
+[HttpPost]
+public IActionResult Archive(int id)
 {
-    _notifyService = notifyService;
+    notyf.Success("Order archived.");
+    return NoContent();
 }
 ```
-Once the Injection is done, you can call the toast notification as you need. Currently 5 Types are supported.
 
-### Success
-```csharp
-_notifyService.Success("This is a Success Notification");
+Then call it however you like - the toast shows up on its own:
+
+```js
+await fetch("/orders/archive/42", { method: "POST" });
 ```
 
-### Error
-```csharp
-_notifyService.Error("This is an Error Notification");
-```
+The same goes for jQuery (`$.post(...)`), plain `XMLHttpRequest` and htmx. Error responses (400, 500...) carry toasts too.
 
-### Warning
-```csharp
-_notifyService.Warning("This is a Warning Notification");
-```
+How it works: for same-origin requests the library adds an `X-Requested-With` header, the server sends the toasts back in a response header, and the script shows them. For cross-origin calls, add `X-Requested-With: XMLHttpRequest` to the request yourself.
 
-### Information
-```csharp
-_notifyService.Information("This is an Information Notification");
-```
-#### Set Toast Duration
-By default, the toast gets dismissed in 5 seconds. You can set the duration(in seconds) after which the toast will be dismissed.
-```csharp
-_notifyService.Success("This toast will be dismissed in 10 seconds.",10);
-```
-## Custom
-As the previous 4 Modes are very static in terms of color and icon, I have added a 5th type that let's you customize everything.
+Minimal APIs work the same way:
 
 ```csharp
-_notifyService.Custom("Custom Notification - closes in 5 seconds.", 5, "whitesmoke");
-_notifyService.Custom("Custom Notification - closes in 5 seconds.", 10, "#135224");
-            
+app.MapPost("/api/orders/{id:int}/cancel", (int id, INotyfService notyf) =>
+{
+    notyf.Warning($"Order #{id} cancelled.");
+    return Results.NoContent();
+});
 ```
-## Demo - Toastify
 
-A Demo Implementation using ASP.NET Core MVC can be found here - https://github.com/codewithmukesh/ToastNotification/tree/master/ToastNotification.Toastify
+## Configuration
 
-# Mentions
+Every setting is optional.
 
-The Javascript libraries used in this project are https://github.com/caroso1222/notyf and https://apvarun.github.io/toastify-js/.
+```csharp
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 5;
+    config.Position = NotyfPosition.BottomRight;
+    config.IsDismissable = true;
 
-# Support
-Has this Project helped you learn something New? or Helped you at work? Do Consider Supporting.
+    // Per-type colours, classes and icons
+    config.Success.BackgroundColor = "#0f766e";
+    config.Error.ClassName = "shake";
+    config.Warning.IconClassName = "bi bi-exclamation-triangle";
 
-<a href="https://www.buymeacoffee.com/codewithmukesh" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" width="200"  ></a>
+    // Everything else
+    config.IsRtl = true;
+    config.ClassName = "brand-toast";
+    config.IncludeFontAwesome = false;
+});
+```
 
-# About the Author
-### Mukesh Murugan
-- Blogs at [codewithmukesh.com](https://www.codewithmukesh.com)
-- Facebook - [codewithmukesh](https://www.facebook.com/codewithmukesh)
-- Twitter - [Mukesh Murugan](https://www.twitter.com/iammukeshm)
-- Twitter - [codewithmukesh](https://www.twitter.com/codewithmukesh)
-- Linkedin - [Mukesh Murugan](https://www.linkedin.com/in/iammukeshm/)
+| Setting | Default | What it does |
+|---|---|---|
+| `DurationInSeconds` | `5` | Default duration for every toast. |
+| `Position` | `BottomRight` | `TopRight`, `BottomRight`, `BottomLeft`, `TopLeft`, `TopCenter`, `BottomCenter`, `TopFullWidth`, `BottomFullWidth`. |
+| `IsDismissable` | `false` | Shows a close button on every toast. |
+| `HasRippleEffect` | `true` | Notyf's ripple animation. |
+| `IsRtl` | `false` | Right-to-left layout. |
+| `ClassName` | - | Extra CSS class on every toast. |
+| `Success`, `Error`, `Warning`, `Information`, `Custom` | v1 colours | `BackgroundColor`, `ClassName` and `IconClassName` for each type. |
+| `IncludeFontAwesome` | `true` | Loads Font Awesome 4.7 for the Warning / Information icons. Turn it off if you already load your own icons. |
+| `FontAwesomeUrl` | CDN | Point it to a local copy if you don't want the CDN. |
+| `AutoHandleAjax` | `true` | Shows toasts from fetch / AJAX / htmx responses automatically. |
+
+You can also pass a CSS class to a single toast:
+
+```csharp
+notyf.Custom("Welcome back, <b>Mukesh</b>!", 5, "#1b1712", "fa fa-hand-peace-o", className: "is-greeting");
+```
+
+## Using Toastify Instead of Notyf
+
+Prefer Toastify's look? Swap the three lines:
+
+```csharp
+builder.Services.AddToastify(config =>
+{
+    config.DurationInSeconds = 5;
+    config.Gravity = Gravity.Bottom;   // Top or Bottom
+    config.Position = Position.Right;  // Left or Right
+});
+
+app.UseToastify();
+```
+
+```cshtml
+@await Component.InvokeAsync("Toastify")
+```
+
+Then inject `IToastifyService` instead of `INotyfService`. The methods are the same. `Custom` takes any CSS background, gradients included:
+
+```csharp
+toastify.Custom("Deployed!", 5, "linear-gradient(135deg, #5b30d6, #d63085)");
+```
+
+## Security
+
+**Messages are rendered as HTML.** That's what lets you use `<b>` or `<br>` in a toast. It also means you should never pass raw user input. Encode it first:
+
+```csharp
+notyf.Error($"Could not save {HtmlEncoder.Default.Encode(request.Name)}");
+```
+
+**Content Security Policy.** v2 doesn't render any inline JavaScript. The toasts travel in a JSON data block, so `script-src 'self'` works as is. If your CSP uses nonces, pass yours in:
+
+```cshtml
+@await Component.InvokeAsync("Notyf", new { nonce = Context.Items["csp-nonce"] })
+```
+
+## Docs App
+
+The [samples/ToastNotification.Docs](samples/ToastNotification.Docs) app is the documentation site, and it runs locally:
+
+```bash
+cd samples/ToastNotification.Docs
+dotnet run
+```
+
+What you get:
+
+- A **live playground** - build a toast, watch the C# code update, and fire it from the server.
+- **Notyf and Toastify side by side**, so you can pick the one you like.
+- A **setup wizard** that gives you the exact code for MVC, Razor Pages or Minimal APIs.
+- Every docs section with a button to try it, and a toggle to switch the code between Notyf and Toastify.
+
+It uses all three workloads for real: MVC controllers, a Razor Page (`/checkout`) and Minimal API endpoints. It registers both libraries only so it can compare them - your app needs just one.
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| 404 on `/_content/AspNetCoreHero.ToastNotification/...` | You're running an unpublished app outside the Development environment, so static web assets are off. | Publish the app, or add `builder.WebHost.UseStaticWebAssets();`. |
+| No toast after a fetch / AJAX call | `app.UseNotyf()` is missing, or the call goes to another origin. | Add `UseNotyf()`. For cross-origin calls, send `X-Requested-With: XMLHttpRequest`. |
+| Toast shows twice after upgrading from v1 | Your code still calls `getResponseHeaders(xhr)`. | Remove the call. v2 handles AJAX on its own. |
+| Warning / Information icons are missing | `IncludeFontAwesome = false` and no other icon font on the page. | Load Font Awesome yourself, or set `IconClassName` for those types. |
+
+## Upgrading from v1
+
+Most apps only need to bump the package version. Here's what changed:
+
+- **Targets .NET 8 and .NET 10.** .NET Core 3.1 and .NET 5 are no longer supported. Stay on 1.1.0 if you need them.
+- **jQuery is no longer needed**, and the component can sit anywhere before `</body>`.
+- **Duration `0` now means sticky.** In v1 it meant "use the default". Pass `null` (or nothing) for the default.
+- **AJAX works automatically**, including `fetch` and htmx. Remove any manual `getResponseHeaders(xhr)` calls.
+- **Newtonsoft.Json is gone.** The library uses System.Text.Json now, and the internal `JsonSerialization` helper is no longer public.
+- `AddNotyf()` / `AddToastify()` now return `IServiceCollection` and live in the `Microsoft.Extensions.DependencyInjection` namespace. `UseNotyf()` / `UseToastify()` live in `Microsoft.AspNetCore.Builder`. Your existing code still compiles.
+- `INotyfService.Custom` and `IToastifyService.Custom` have a new optional `className` parameter. If you wrote your own implementation of these interfaces, add the parameter.
+- Toastify now supports AJAX too. Add `app.UseToastify()`.
+
+The full list is in the [CHANGELOG](CHANGELOG.md).
+
+## Contributing
+
+Issues and pull requests are welcome. To build and test locally:
+
+```bash
+dotnet build
+dotnet test --solution AspNetCoreHero.ToastNotification.slnx
+```
+
+The browser tests use Playwright. Install Chromium once with:
+
+```bash
+pwsh tests/AspNetCoreHero.ToastNotification.E2ETests/bin/Debug/net10.0/playwright.ps1 install chromium
+```
+
+## Credits
+
+This package wraps two great open-source libraries: [Notyf](https://github.com/caroso1222/notyf) by Carlos Roso and [Toastify](https://github.com/apvarun/toastify-js) by Varun A P.
+
+## Support
+
+If this package saves you time, consider supporting it.
+
+<a href="https://www.buymeacoffee.com/codewithmukesh" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" width="200"></a>
+
+## About the Author
+
+I'm Mukesh Murugan. I write about .NET at [codewithmukesh.com](https://codewithmukesh.com) - free courses, deep dives and a weekly newsletter for .NET developers.
+
+- LinkedIn - [Mukesh Murugan](https://www.linkedin.com/in/iammukeshm/)
+- X - [@iammukeshm](https://x.com/iammukeshm)
+
+## License
+
+MIT

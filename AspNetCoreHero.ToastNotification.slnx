@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/ToastNotification.Docs/ToastNotification.Docs.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/AspNetCoreHero.ToastNotification/AspNetCoreHero.ToastNotification.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AspNetCoreHero.ToastNotification.E2ETests/AspNetCoreHero.ToastNotification.E2ETests.csproj" />
+    <Project Path="tests/AspNetCoreHero.ToastNotification.TestApp/AspNetCoreHero.ToastNotification.TestApp.csproj" />
+    <Project Path="tests/AspNetCoreHero.ToastNotification.Tests/AspNetCoreHero.ToastNotification.Tests.csproj" />
+  </Folder>
+</Solution>

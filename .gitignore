@@ -338,3 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Public API snapshot output (see tests/.../PublicApi)
+*.received.txt

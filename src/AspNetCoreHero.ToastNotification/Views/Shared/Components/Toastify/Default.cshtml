@@ -1,0 +1,7 @@
+@model AspNetCoreHero.ToastNotification.Toastify.ToastifyViewModel
+<link rel="stylesheet" href="~/_content/AspNetCoreHero.ToastNotification/toastify.css" asp-append-version="true">
+@* Data only - never executed, so it needs no CSP nonce. The JSON is HTML-escaped by the serializer. *@
+<script type="application/json" id="aspnetcorehero-toastify-data">@Html.Raw(Model.ClientData)</script>
+<script src="~/_content/AspNetCoreHero.ToastNotification/toastify.js" asp-append-version="true" nonce="@Model.Nonce"></script>
+<script src="~/_content/AspNetCoreHero.ToastNotification/toastnotification.ajax.js" asp-append-version="true" nonce="@Model.Nonce"></script>
+<script src="~/_content/AspNetCoreHero.ToastNotification/toastify.aspnetcore.js" asp-append-version="true" nonce="@Model.Nonce"></script>

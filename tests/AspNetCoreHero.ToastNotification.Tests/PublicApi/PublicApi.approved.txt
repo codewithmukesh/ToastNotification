@@ -1,0 +1,350 @@
+[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ProvideApplicationPartFactory("Microsoft.AspNetCore.Mvc.ApplicationParts.ConsolidatedAssemblyApplicationPartFact" +
+    "ory, Microsoft.AspNetCore.Mvc.Razor")]
+[assembly: Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem(typeof(AspNetCoreGeneratedDocument.Views_Shared_Components_Notyf_Default), "mvc.1.0.view", "/Views/Shared/Components/Notyf/Default.cshtml")]
+[assembly: Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem(typeof(AspNetCoreGeneratedDocument.Views_Shared_Components_Toastify_Default), "mvc.1.0.view", "/Views/Shared/Components/Toastify/Default.cshtml")]
+[assembly: Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem(typeof(AspNetCoreGeneratedDocument.Views__ViewImports), "mvc.1.0.view", "/Views/_ViewImports.cshtml")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AspNetCoreHero.ToastNotification.Tests")]
+namespace AspNetCoreHero.ToastNotification.Abstractions
+{
+    public interface INotyfService
+    {
+        void Custom(string message, int? durationInSeconds = default, string? backgroundColor = "black", string? iconClassName = "home", string? className = null);
+        void Error(string message, int? durationInSeconds = default);
+        System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Notyf.Models.NotyfNotification> GetNotifications();
+        void Information(string message, int? durationInSeconds = default);
+        System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Notyf.Models.NotyfNotification> ReadAllNotifications();
+        void RemoveAll();
+        void Success(string message, int? durationInSeconds = default);
+        void Warning(string message, int? durationInSeconds = default);
+    }
+    public interface ITempDataService
+    {
+        void Add(string key, object value);
+        T? Get<T>(string key)
+            where T :  class;
+        T? Peek<T>(string key)
+            where T :  class;
+        bool Remove(string key);
+    }
+    public interface IToastNotificationContainer<TNotification>
+        where TNotification :  class
+    {
+        void Add(TNotification notification);
+        System.Collections.Generic.IList<TNotification> GetAll();
+        System.Collections.Generic.IList<TNotification> ReadAll();
+        void RemoveAll();
+    }
+    public interface IToastNotificationService { }
+    public interface IToastifyService : AspNetCoreHero.ToastNotification.Abstractions.IToastNotificationService
+    {
+        void Custom(string message, int? durationInSeconds = default, string? backgroundColor = "linear-gradient(to right, #00b09b, #96c93d)", string? className = null);
+        void Error(string message, int? durationInSeconds = default);
+        System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyNotification> GetNotifications();
+        void Information(string message, int? durationInSeconds = default);
+        System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyNotification> ReadAllNotifications();
+        void RemoveAll();
+        void Success(string message, int? durationInSeconds = default);
+        void Warning(string message, int? durationInSeconds = default);
+    }
+    public class Notification
+    {
+        public Notification() { }
+        public Notification(AspNetCoreHero.ToastNotification.Enums.ToastNotificationType type, string message, int? durationInSeconds) { }
+        public string? BackgroundColor { get; set; }
+        public string? ClassName { get; set; }
+        public int? Duration { get; set; }
+        public string Message { get; set; }
+        public AspNetCoreHero.ToastNotification.Enums.ToastNotificationType Type { get; set; }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Containers
+{
+    public interface IMessageContainerFactory
+    {
+        AspNetCoreHero.ToastNotification.Abstractions.IToastNotificationContainer<TMessage> Create<TMessage>()
+            where TMessage :  class;
+    }
+    public class InMemoryNotificationContainer<TMessage> : AspNetCoreHero.ToastNotification.Abstractions.IToastNotificationContainer<TMessage>
+        where TMessage :  class
+    {
+        public InMemoryNotificationContainer() { }
+        public void Add(TMessage message) { }
+        public System.Collections.Generic.IList<TMessage> GetAll() { }
+        public System.Collections.Generic.IList<TMessage> ReadAll() { }
+        public void RemoveAll() { }
+    }
+    public class TempDataToastNotificationContainer<TMessage> : AspNetCoreHero.ToastNotification.Abstractions.IToastNotificationContainer<TMessage>
+        where TMessage :  class
+    {
+        public TempDataToastNotificationContainer(AspNetCoreHero.ToastNotification.Abstractions.ITempDataService tempDataWrapper) { }
+        public void Add(TMessage message) { }
+        public System.Collections.Generic.IList<TMessage> GetAll() { }
+        public System.Collections.Generic.IList<TMessage> ReadAll() { }
+        public void RemoveAll() { }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Enums
+{
+    public enum ToastNotificationType
+    {
+        Success = 0,
+        Error = 1,
+        Warning = 2,
+        Information = 3,
+        Custom = 4,
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Extensions
+{
+    public static class EnumExtensions
+    {
+        public static string ToDescriptionString<T>(this T source)
+            where T : System.Enum { }
+    }
+}
+namespace AspNetCoreHero.ToastNotification
+{
+    public enum Gravity
+    {
+        [System.ComponentModel.Description("top")]
+        Top = 0,
+        [System.ComponentModel.Description("bottom")]
+        Bottom = 1,
+    }
+    public class NotyfConfig
+    {
+        public const string DefaultFontAwesomeUrl = "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+        public NotyfConfig() { }
+        public bool AutoHandleAjax { get; set; }
+        public string? ClassName { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Custom { get; set; }
+        public int DurationInSeconds { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Error { get; set; }
+        public string FontAwesomeUrl { get; set; }
+        public bool HasRippleEffect { get; set; }
+        public bool IncludeFontAwesome { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Information { get; set; }
+        public bool IsDismissable { get; set; }
+        public bool IsRtl { get; set; }
+        public AspNetCoreHero.ToastNotification.NotyfPosition Position { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Success { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Warning { get; set; }
+    }
+    public enum NotyfPosition
+    {
+        [System.ComponentModel.Description("right-top")]
+        TopRight = 0,
+        [System.ComponentModel.Description("right-bottom")]
+        BottomRight = 1,
+        [System.ComponentModel.Description("left-bottom")]
+        BottomLeft = 2,
+        [System.ComponentModel.Description("left-top")]
+        TopLeft = 3,
+        [System.ComponentModel.Description("center-top")]
+        TopCenter = 4,
+        [System.ComponentModel.Description("center-bottom")]
+        BottomCenter = 5,
+        [System.ComponentModel.Description("center-top")]
+        TopFullWidth = 6,
+        [System.ComponentModel.Description("center-bottom")]
+        BottomFullWidth = 7,
+    }
+    public enum Position
+    {
+        [System.ComponentModel.Description("left")]
+        Left = 0,
+        [System.ComponentModel.Description("right")]
+        Right = 1,
+    }
+    public class ToastTypeStyle
+    {
+        public ToastTypeStyle() { }
+        public string? BackgroundColor { get; set; }
+        public string? ClassName { get; set; }
+        public string? IconClassName { get; set; }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Helpers
+{
+    public static class RequestHelpers
+    {
+        public static bool IsNotyfAjaxRequest(this Microsoft.AspNetCore.Http.HttpRequest request) { }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Notyf.Models
+{
+    public class Config
+    {
+        public Config() { }
+        public string? background { get; set; }
+        public string? className { get; set; }
+        public AspNetCoreHero.ToastNotification.Notyf.Models.Icon? icon { get; set; }
+        public string? type { get; set; }
+    }
+    public class Icon
+    {
+        public Icon() { }
+        public string? className { get; set; }
+        public string? tagName { get; set; }
+        public string? text { get; set; }
+    }
+    public class NotyfEntity
+    {
+        public NotyfEntity(AspNetCoreHero.ToastNotification.NotyfConfig? config) { }
+        public NotyfEntity(int durationInSeconds = 5, AspNetCoreHero.ToastNotification.NotyfPosition toastPosition = 1, bool isDismissible = true) { }
+        public bool dismissible { get; set; }
+        public int duration { get; set; }
+        public AspNetCoreHero.ToastNotification.Notyf.Models.Position position { get; set; }
+        public bool ripple { get; set; }
+        public System.Collections.Generic.List<AspNetCoreHero.ToastNotification.Notyf.Models.Config> types { get; set; }
+    }
+    public class NotyfNotification : AspNetCoreHero.ToastNotification.Abstractions.Notification
+    {
+        public NotyfNotification() { }
+        public NotyfNotification(AspNetCoreHero.ToastNotification.Enums.ToastNotificationType type, string message, int? durationInSeconds) { }
+        public string? Icon { get; set; }
+    }
+    public class Position
+    {
+        public Position() { }
+        public string? x { get; set; }
+        public string? y { get; set; }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Notyf
+{
+    public class NotyfService : AspNetCoreHero.ToastNotification.Abstractions.INotyfService
+    {
+        protected AspNetCoreHero.ToastNotification.Abstractions.IToastNotificationContainer<AspNetCoreHero.ToastNotification.Notyf.Models.NotyfNotification> MessageContainer;
+        public NotyfService(AspNetCoreHero.ToastNotification.Containers.IMessageContainerFactory messageContainerFactory) { }
+        public void Custom(string message, int? durationInSeconds = default, string? backgroundColor = "black", string? iconClassName = "home", string? className = null) { }
+        public void Error(string message, int? durationInSeconds = default) { }
+        public System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Notyf.Models.NotyfNotification> GetNotifications() { }
+        public void Information(string message, int? durationInSeconds = default) { }
+        public System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Notyf.Models.NotyfNotification> ReadAllNotifications() { }
+        public void RemoveAll() { }
+        public void Success(string message, int? durationInSeconds = default) { }
+        public void Warning(string message, int? durationInSeconds = default) { }
+    }
+    public class NotyfViewModel
+    {
+        public NotyfViewModel() { }
+        public string ClientData { get; set; }
+        public string Configuration { get; set; }
+        public string? FontAwesomeUrl { get; set; }
+        public bool IncludeFontAwesome { get; set; }
+        public string? Nonce { get; set; }
+        public System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Notyf.Models.NotyfNotification> Notifications { get; set; }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Services
+{
+    public class TempDataService : AspNetCoreHero.ToastNotification.Abstractions.ITempDataService
+    {
+        public TempDataService(Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataDictionaryFactory tempDataDictionaryFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor) { }
+        public void Add(string key, object value) { }
+        public T? Get<T>(string key)
+            where T :  class { }
+        public T? Peek<T>(string key)
+            where T :  class { }
+        public bool Remove(string key) { }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Toastify.Models
+{
+    public class ToastifyConfig
+    {
+        public ToastifyConfig() { }
+        public bool AutoHandleAjax { get; set; }
+        public string? ClassName { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Custom { get; set; }
+        public int DurationInSeconds { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Error { get; set; }
+        public AspNetCoreHero.ToastNotification.Gravity Gravity { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Information { get; set; }
+        public bool IsDismissable { get; set; }
+        public AspNetCoreHero.ToastNotification.Position Position { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Success { get; set; }
+        public AspNetCoreHero.ToastNotification.ToastTypeStyle Warning { get; set; }
+    }
+    public class ToastifyEntity
+    {
+        public ToastifyEntity(int durationInSeconds, AspNetCoreHero.ToastNotification.Gravity gravity = 1, AspNetCoreHero.ToastNotification.Position position = 1) { }
+        public System.Uri? avatar { get; set; }
+        public string? backgroundColor { get; set; }
+        public string? className { get; set; }
+        public bool close { get; set; }
+        public System.Uri? destination { get; set; }
+        public int? duration { get; set; }
+        public string gravity { get; set; }
+        public bool newWindow { get; set; }
+        public string position { get; set; }
+        public bool stopOnFocus { get; set; }
+        public string? text { get; set; }
+    }
+    public class ToastifyNotification : AspNetCoreHero.ToastNotification.Abstractions.Notification
+    {
+        public ToastifyNotification() { }
+        public ToastifyNotification(AspNetCoreHero.ToastNotification.Enums.ToastNotificationType type, string message, int? durationInSeconds) { }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Toastify
+{
+    public class ToastifyService : AspNetCoreHero.ToastNotification.Abstractions.IToastNotificationService, AspNetCoreHero.ToastNotification.Abstractions.IToastifyService
+    {
+        public ToastifyService(AspNetCoreHero.ToastNotification.Abstractions.IToastNotificationContainer<AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyNotification> container) { }
+        public ToastifyService(AspNetCoreHero.ToastNotification.Containers.IMessageContainerFactory messageContainerFactory) { }
+        public void Custom(string message, int? durationInSeconds = default, string? backgroundColor = "linear-gradient(to right, #00b09b, #96c93d)", string? className = null) { }
+        public void Error(string message, int? durationInSeconds = default) { }
+        public System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyNotification> GetNotifications() { }
+        public void Information(string message, int? durationInSeconds = default) { }
+        public System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyNotification> ReadAllNotifications() { }
+        public void RemoveAll() { }
+        public void Success(string message, int? durationInSeconds = default) { }
+        public void Warning(string message, int? durationInSeconds = default) { }
+    }
+    public class ToastifyViewModel
+    {
+        public ToastifyViewModel() { }
+        public string ClientData { get; set; }
+        public AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyEntity Configuration { get; set; }
+        public string? Nonce { get; set; }
+        public System.Collections.Generic.IEnumerable<AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyNotification> Notifications { get; set; }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Views.Shared.Components.Notyf
+{
+    [Microsoft.AspNetCore.Mvc.ViewComponent(Name="Notyf")]
+    public class NotyfViewComponent : Microsoft.AspNetCore.Mvc.ViewComponent
+    {
+        public NotyfViewComponent(AspNetCoreHero.ToastNotification.Abstractions.INotyfService service, AspNetCoreHero.ToastNotification.Notyf.Models.NotyfEntity options, AspNetCoreHero.ToastNotification.NotyfConfig? config = null) { }
+        public AspNetCoreHero.ToastNotification.Notyf.Models.NotyfEntity _options { get; }
+        public Microsoft.AspNetCore.Mvc.IViewComponentResult Invoke(string? nonce = null) { }
+    }
+}
+namespace AspNetCoreHero.ToastNotification.Views.Shared.Components.Toastify
+{
+    [Microsoft.AspNetCore.Mvc.ViewComponent(Name="Toastify")]
+    public class ToastifyViewComponent : Microsoft.AspNetCore.Mvc.ViewComponent
+    {
+        public ToastifyViewComponent(AspNetCoreHero.ToastNotification.Abstractions.IToastifyService service, AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyEntity options, AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyConfig? config = null) { }
+        public AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyEntity _options { get; }
+        public Microsoft.AspNetCore.Mvc.IViewComponentResult Invoke(string? nonce = null) { }
+    }
+}
+namespace Microsoft.AspNetCore.Builder
+{
+    public static class ToastNotificationApplicationBuilderExtensions
+    {
+        public static Microsoft.AspNetCore.Builder.IApplicationBuilder UseNotyf(this Microsoft.AspNetCore.Builder.IApplicationBuilder builder) { }
+        public static Microsoft.AspNetCore.Builder.IApplicationBuilder UseToastify(this Microsoft.AspNetCore.Builder.IApplicationBuilder builder) { }
+    }
+}
+namespace Microsoft.Extensions.DependencyInjection
+{
+    public static class ToastNotificationServiceCollectionExtensions
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddNotyf(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<AspNetCoreHero.ToastNotification.NotyfConfig>? configure = null) { }
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddToastify(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<AspNetCoreHero.ToastNotification.Toastify.Models.ToastifyConfig>? configure = null) { }
+    }
+}

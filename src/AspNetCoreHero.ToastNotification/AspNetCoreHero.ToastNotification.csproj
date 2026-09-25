@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Public members are documented in the README; don't fail the build on missing XML comments. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <!-- Package metadata -->
+  <PropertyGroup>
+    <PackageId>AspNetCoreHero.ToastNotification</PackageId>
+    <Version>2.0.0</Version>
+    <Authors>Mukesh Murugan</Authors>
+    <Company>codewithmukesh</Company>
+    <Product>AspNetCoreHero.ToastNotification</Product>
+    <Description>Toast notifications for ASP.NET Core MVC and Razor Pages. Call _notyf.Success("Saved!") from C# and the toast shows up - after redirects, form posts, fetch, jQuery AJAX and htmx requests. No jQuery required. CSP friendly. Supports .NET 8 and .NET 10.</Description>
+    <PackageTags>toast;toastr;notification;notyf;toastify;flash-message;aspnetcore;mvc;razor-pages;ajax;htmx</PackageTags>
+    <Copyright>Copyright © Mukesh Murugan</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/codewithmukesh/ToastNotification</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/codewithmukesh/ToastNotification/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/codewithmukesh/ToastNotification</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!-- Build quality: SourceLink is built into the .NET 8+ SDK -->
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <!-- From 2.0.1 onwards: <PackageValidationBaselineVersion>2.0.0</PackageValidationBaselineVersion> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AspNetCoreHero.ToastNotification.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+</Project>
