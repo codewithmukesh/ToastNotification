@@ -111,7 +111,7 @@ Here, you add the class of the icon as required. Font Awesome icons are supporte
 
 ## Demo - Notyf
 
-A Demo Implementation using ASP.NET Core MVC can be found here - https://github.com/aspnetcorehero/ToastNotification/tree/master/ToastNotification.Notyf
+A Demo Implementation using ASP.NET Core MVC can be found here - https://github.com/codewithmukesh/ToastNotification/tree/master/ToastNotification.Notyf
 
 # Toastify-Js
 
@@ -181,7 +181,7 @@ _notifyService.Custom("Custom Notification - closes in 5 seconds.", 10, "#135224
 ```
 ## Demo - Toastify
 
-A Demo Implementation using ASP.NET Core MVC can be found here - https://github.com/aspnetcorehero/ToastNotification/tree/master/ToastNotification.Toastify
+A Demo Implementation using ASP.NET Core MVC can be found here - https://github.com/codewithmukesh/ToastNotification/tree/master/ToastNotification.Toastify
 
 # Mentions
 
