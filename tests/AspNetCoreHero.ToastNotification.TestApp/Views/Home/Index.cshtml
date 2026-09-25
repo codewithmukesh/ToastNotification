@@ -1,0 +1,16 @@
+<h1>ToastNotification test app</h1>
+
+<button id="btn-fetch" type="button">fetch</button>
+<button id="btn-fetch-error" type="button">fetch error</button>
+<button id="btn-xhr" type="button">XMLHttpRequest</button>
+<button id="btn-jquery" type="button">jQuery</button>
+<button id="btn-toastify-fetch" type="button">Toastify fetch</button>
+<button id="btn-htmx" type="button" hx-get="/Home/NotyfHtmx" hx-target="#htmx-target">htmx</button>
+<div id="htmx-target"></div>
+<button id="btn-ajax-redirect" type="button">ajax redirect</button>
+<button id="btn-cross-origin" type="button">cross origin</button>
+<a id="lnk-boost" hx-boost="true" href="/Home/NotyfRedirect">boosted link</a>
+
+<form method="post" action="/Home/NotyfPost">
+    <button id="btn-post" type="submit">post</button>
+</form>

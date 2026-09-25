@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>ToastNotification test app</title>
+</head>
+<body>
+    @RenderBody()
+
+    @await Component.InvokeAsync("Notyf", new { nonce = ViewData["Nonce"] as string })
+    @await Component.InvokeAsync("Toastify", new { nonce = ViewData["Nonce"] as string })
+
+    @if (ViewData["NoJquery"] is not true)
+    {
+        <script src="~/js/jquery.min.js"></script>
+    }
+    <script src="~/js/htmx.min.js"></script>
+    <script src="~/js/test.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+name: Release
+
+# Publishes to nuget.org when a GitHub release is published (tag like v2.0.0).
+# Uses NuGet Trusted Publishing (OIDC) - no long-lived API key in the repo.
+#
+# One-time setup:
+#   1. nuget.org -> your profile -> Trusted Publishing -> add a policy:
+#      owner "codewithmukesh", repository "ToastNotification", workflow "release.yml".
+#   2. Repo -> Settings -> Secrets -> Actions -> add NUGET_USER = your nuget.org profile name.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Test
+        run: |
+          dotnet build AspNetCoreHero.ToastNotification.slnx --configuration Release
+          pwsh tests/AspNetCoreHero.ToastNotification.E2ETests/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+          dotnet test --solution AspNetCoreHero.ToastNotification.slnx --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack src/AspNetCoreHero.ToastNotification/AspNetCoreHero.ToastNotification.csproj --configuration Release --no-build --output artifacts
+
+      - name: NuGet login (OIDC)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

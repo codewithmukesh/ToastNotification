@@ -1,0 +1,15 @@
+@model AspNetCoreHero.ToastNotification.Notyf.NotyfViewModel
+@if (Model.IncludeFontAwesome && Model.FontAwesomeUrl == AspNetCoreHero.ToastNotification.NotyfConfig.DefaultFontAwesomeUrl)
+{
+    <link rel="stylesheet" href="@Model.FontAwesomeUrl" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+}
+else if (Model.IncludeFontAwesome)
+{
+    <link rel="stylesheet" href="@Model.FontAwesomeUrl">
+}
+<link rel="stylesheet" href="~/_content/AspNetCoreHero.ToastNotification/notyf.min.css" asp-append-version="true">
+@* Data only - never executed, so it needs no CSP nonce. The JSON is HTML-escaped by the serializer. *@
+<script type="application/json" id="aspnetcorehero-notyf-data">@Html.Raw(Model.ClientData)</script>
+<script src="~/_content/AspNetCoreHero.ToastNotification/notyf.min.js" asp-append-version="true" nonce="@Model.Nonce"></script>
+<script src="~/_content/AspNetCoreHero.ToastNotification/toastnotification.ajax.js" asp-append-version="true" nonce="@Model.Nonce"></script>
+<script src="~/_content/AspNetCoreHero.ToastNotification/notyf.aspnetcore.js" asp-append-version="true" nonce="@Model.Nonce"></script>
