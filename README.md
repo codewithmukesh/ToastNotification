@@ -204,17 +204,23 @@ notyf.Error($"Could not save {HtmlEncoder.Default.Encode(request.Name)}");
 @await Component.InvokeAsync("Notyf", new { nonce = Context.Items["csp-nonce"] })
 ```
 
-## Samples
+## Docs App
 
-The [samples](samples) folder has two runnable apps, and each one doubles as the documentation site. You get a live playground (build a toast, see the C# update, fire it from the server), Notyf and Toastify side by side, a setup wizard that gives you the exact code for MVC, Razor Pages or Minimal APIs, and every docs section with a button to try it.
-
-- [`ToastNotification.Notyf`](samples/ToastNotification.Notyf) - Notyf with ASP.NET Core MVC and Minimal API endpoints.
-- [`ToastNotification.Toastify`](samples/ToastNotification.Toastify) - Toastify with Razor Pages and Minimal API endpoints.
+The [samples/ToastNotification.Docs](samples/ToastNotification.Docs) app is the documentation site, and it runs locally:
 
 ```bash
-cd samples/ToastNotification.Notyf
+cd samples/ToastNotification.Docs
 dotnet run
 ```
+
+What you get:
+
+- A **live playground** - build a toast, watch the C# code update, and fire it from the server.
+- **Notyf and Toastify side by side**, so you can pick the one you like.
+- A **setup wizard** that gives you the exact code for MVC, Razor Pages or Minimal APIs.
+- Every docs section with a button to try it, and a toggle to switch the code between Notyf and Toastify.
+
+It uses all three workloads for real: MVC controllers, a Razor Page (`/checkout`) and Minimal API endpoints. It registers both libraries only so it can compare them - your app needs just one.
 
 ## Troubleshooting
 

@@ -7,6 +7,8 @@ namespace AspNetCoreHero.ToastNotification.Tests.Integration;
 
 public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
+    private static CancellationToken Ct => TestContext.Current.CancellationToken;
+
     private HttpClient CreateClient(bool followRedirects = true) => factory.CreateClient(new WebApplicationFactoryClientOptions
     {
         AllowAutoRedirect = followRedirects,
@@ -27,7 +29,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Page_renders_all_notification_types()
     {
-        var html = await CreateClient().GetStringAsync("/Home/NotyfAll");
+        var html = await CreateClient().GetStringAsync("/Home/NotyfAll", Ct);
 
         Messages(html).ShouldBe(["Notyf success", "Notyf error", "Notyf warning", "Notyf information", "Notyf custom"]);
         var custom = ReadClientData(html, "aspnetcorehero-notyf-data").GetProperty("notifications")[4];
@@ -39,7 +41,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Page_renders_notyf_configuration()
     {
-        var html = await CreateClient().GetStringAsync("/Home/Index");
+        var html = await CreateClient().GetStringAsync("/Home/Index", Ct);
         var config = ReadClientData(html, "aspnetcorehero-notyf-data").GetProperty("config");
 
         config.GetProperty("duration").GetInt32().ShouldBe(2000);
@@ -51,7 +53,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     public async Task No_inline_javascript_is_rendered()
     {
         // CSP: every <script> is either external (src=) or a JSON data block.
-        var html = await CreateClient().GetStringAsync("/Home/NotyfAll");
+        var html = await CreateClient().GetStringAsync("/Home/NotyfAll", Ct);
 
         var inlineScripts = Regex.Matches(html, "<script(?![^>]*\\bsrc=)(?![^>]*type=\"application/json\")[^>]*>");
         inlineScripts.Count.ShouldBe(0);
@@ -60,7 +62,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Assets_are_cache_busted()
     {
-        var html = await CreateClient().GetStringAsync("/Home/Index");
+        var html = await CreateClient().GetStringAsync("/Home/Index", Ct);
 
         html.ShouldMatch("_content/AspNetCoreHero.ToastNotification/notyf.aspnetcore.js\\?v=");
         html.ShouldMatch("_content/AspNetCoreHero.ToastNotification/notyf.min.css\\?v=");
@@ -76,7 +78,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [InlineData("toastnotification.ajax.js")]
     public async Task Static_assets_are_served(string file)
     {
-        var response = await CreateClient().GetAsync($"/_content/AspNetCoreHero.ToastNotification/{file}");
+        var response = await CreateClient().GetAsync($"/_content/AspNetCoreHero.ToastNotification/{file}", Ct);
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
@@ -84,7 +86,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Font_awesome_can_be_turned_off()
     {
-        var html = await CreateClient().GetStringAsync("/Home/Index");
+        var html = await CreateClient().GetStringAsync("/Home/Index", Ct);
 
         html.ShouldNotContain("font-awesome");
     }
@@ -94,13 +96,13 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     {
         var client = CreateClient(followRedirects: false);
 
-        var redirect = await client.GetAsync("/Home/NotyfRedirect");
+        var redirect = await client.GetAsync("/Home/NotyfRedirect", Ct);
         redirect.StatusCode.ShouldBe(HttpStatusCode.Redirect);
 
-        var first = await client.GetStringAsync(redirect.Headers.Location!.ToString());
+        var first = await client.GetStringAsync(redirect.Headers.Location!.ToString(), Ct);
         Messages(first).ShouldBe(["Survived the redirect"]);
 
-        var second = await client.GetStringAsync("/Home/Index");
+        var second = await client.GetStringAsync("/Home/Index", Ct);
         Messages(second).ShouldBeEmpty();
     }
 
@@ -108,9 +110,9 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     public async Task Form_post_without_redirect_shows_the_notification()
     {
         // Issue #8.
-        var response = await CreateClient().PostAsync("/Home/NotyfPost", new FormUrlEncodedContent([]));
+        var response = await CreateClient().PostAsync("/Home/NotyfPost", new FormUrlEncodedContent([]), Ct);
 
-        Messages(await response.Content.ReadAsStringAsync()).ShouldBe(["Posted without redirect"]);
+        Messages(await response.Content.ReadAsStringAsync(Ct)).ShouldBe(["Posted without redirect"]);
     }
 
     [Theory]
@@ -122,7 +124,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
         var request = new HttpRequestMessage(HttpMethod.Get, "/Home/NotyfAjax?client=test");
         request.Headers.Add(header, value);
 
-        var response = await client.SendAsync(request);
+        var response = await client.SendAsync(request, Ct);
 
         response.Headers.TryGetValues("X-Notyf-Notifications", out var values).ShouldBeTrue();
         var json = JsonDocument.Parse(Uri.UnescapeDataString(values!.Single())).RootElement;
@@ -130,7 +132,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
         response.Headers.GetValues("Access-Control-Expose-Headers").ShouldContain("X-Notyf-Notifications");
 
         // Not stored in TempData, so it doesn't show again on the next page.
-        Messages(await client.GetStringAsync("/Home/Index")).ShouldBeEmpty();
+        Messages(await client.GetStringAsync("/Home/Index", Ct)).ShouldBeEmpty();
     }
 
     [Fact]
@@ -139,7 +141,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
         var request = new HttpRequestMessage(HttpMethod.Get, "/Home/NotyfAjaxError");
         request.Headers.Add("X-Requested-With", "XMLHttpRequest");
 
-        var response = await CreateClient().SendAsync(request);
+        var response = await CreateClient().SendAsync(request, Ct);
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         response.Headers.Contains("X-Notyf-Notifications").ShouldBeTrue();
@@ -150,17 +152,17 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     {
         var client = CreateClient();
 
-        var response = await client.GetAsync("/Home/NotyfAjax?client=plain");
+        var response = await client.GetAsync("/Home/NotyfAjax?client=plain", Ct);
         response.Headers.Contains("X-Notyf-Notifications").ShouldBeFalse();
 
-        Messages(await client.GetStringAsync("/Home/Index")).ShouldBe(["Ajax via plain"]);
+        Messages(await client.GetStringAsync("/Home/Index", Ct)).ShouldBe(["Ajax via plain"]);
     }
 
     [Fact]
     public async Task Script_breaking_messages_are_escaped()
     {
         // Issue #4 and XSS.
-        var html = await CreateClient().GetStringAsync("/Home/NotyfXss");
+        var html = await CreateClient().GetStringAsync("/Home/NotyfXss", Ct);
 
         var dataBlock = Regex.Match(html, "id=\"aspnetcorehero-notyf-data\">(.*?)</script>", RegexOptions.Singleline).Groups[1].Value;
         dataBlock.ShouldNotContain("<");
@@ -171,7 +173,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     public async Task Quotes_in_a_loop_do_not_break_rendering()
     {
         // Issue #4.
-        var html = await CreateClient().GetStringAsync("/Home/NotyfLoop");
+        var html = await CreateClient().GetStringAsync("/Home/NotyfLoop", Ct);
 
         Messages(html).ShouldBe(["O'Brien is invalid", "D'Angelo is invalid", "N'Golo is invalid"]);
     }
@@ -179,7 +181,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Sticky_notification_has_zero_duration()
     {
-        var html = await CreateClient().GetStringAsync("/Home/NotyfSticky");
+        var html = await CreateClient().GetStringAsync("/Home/NotyfSticky", Ct);
 
         ReadClientData(html, "aspnetcorehero-notyf-data").GetProperty("notifications")[0]
             .GetProperty("duration").GetInt32().ShouldBe(0);
@@ -188,7 +190,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Nonce_is_added_to_every_script_tag()
     {
-        var html = await CreateClient().GetStringAsync("/Home/Nonce");
+        var html = await CreateClient().GetStringAsync("/Home/Nonce", Ct);
 
         var executable = Regex.Matches(html, "<script[^>]*_content/AspNetCoreHero[^>]*>");
         executable.Count.ShouldBe(6);
@@ -198,7 +200,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task No_nonce_attribute_when_none_is_given()
     {
-        var html = await CreateClient().GetStringAsync("/Home/Index");
+        var html = await CreateClient().GetStringAsync("/Home/Index", Ct);
 
         html.ShouldNotContain("nonce=");
     }
@@ -210,7 +212,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
         var request = new HttpRequestMessage(HttpMethod.Get, "/Home/NotyfAjaxRedirect");
         request.Headers.Add("X-Requested-With", "XMLHttpRequest");
 
-        var response = await CreateClient().SendAsync(request);
+        var response = await CreateClient().SendAsync(request, Ct);
 
         response.RequestMessage!.RequestUri!.AbsolutePath.ShouldBe("/Home/AjaxTarget");
         response.Headers.TryGetValues("X-Notyf-Notifications", out var values).ShouldBeTrue();
@@ -224,14 +226,14 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
         var request = new HttpRequestMessage(HttpMethod.Get, "/Home/NotyfMany");
         request.Headers.Add("X-Requested-With", "XMLHttpRequest");
 
-        var response = await client.SendAsync(request);
+        var response = await client.SendAsync(request, Ct);
 
         var header = response.Headers.GetValues("X-Notyf-Notifications").Single();
         header.Length.ShouldBeLessThanOrEqualTo(4096);
         var inHeader = JsonDocument.Parse(Uri.UnescapeDataString(header)).RootElement.GetArrayLength();
         inHeader.ShouldBeGreaterThan(0);
 
-        var nextPage = Messages(await client.GetStringAsync("/Home/Index"));
+        var nextPage = Messages(await client.GetStringAsync("/Home/Index", Ct));
         (inHeader + nextPage.Length).ShouldBe(40);
     }
 
@@ -241,7 +243,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
         var request = new HttpRequestMessage(HttpMethod.Get, "/Home/NotyfHtmlAjax");
         request.Headers.Add("X-Requested-With", "XMLHttpRequest");
 
-        var response = await CreateClient().SendAsync(request);
+        var response = await CreateClient().SendAsync(request, Ct);
 
         var header = response.Headers.GetValues("X-Notyf-Notifications").Single();
         header.ShouldNotContain("%5Cu003C"); // no double escaping of <
@@ -251,7 +253,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Toastify_page_renders_all_types()
     {
-        var html = await CreateClient().GetStringAsync("/Home/ToastifyAll");
+        var html = await CreateClient().GetStringAsync("/Home/ToastifyAll", Ct);
 
         Messages(html, "aspnetcorehero-toastify-data").ShouldBe(
             ["Toastify success", "Toastify error", "Toastify warning", "Toastify information", "Toastify custom"]);
@@ -260,7 +262,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Toastify_survives_a_redirect()
     {
-        var html = await CreateClient().GetStringAsync("/Home/ToastifyRedirect");
+        var html = await CreateClient().GetStringAsync("/Home/ToastifyRedirect", Ct);
 
         Messages(html, "aspnetcorehero-toastify-data").ShouldBe(["Toastify survived the redirect"]);
     }
@@ -271,7 +273,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
         var request = new HttpRequestMessage(HttpMethod.Get, "/Home/ToastifyAjax");
         request.Headers.Add("X-Requested-With", "XMLHttpRequest");
 
-        var response = await CreateClient().SendAsync(request);
+        var response = await CreateClient().SendAsync(request, Ct);
 
         response.Headers.Contains("X-Toastify-Notifications").ShouldBeTrue();
         response.Headers.Contains("X-Notyf-Notifications").ShouldBeFalse();
@@ -280,7 +282,7 @@ public class ToastNotificationIntegrationTests(WebApplicationFactory<Program> fa
     [Fact]
     public async Task Notyf_and_Toastify_notifications_never_mix()
     {
-        var html = await CreateClient().GetStringAsync("/Home/Both");
+        var html = await CreateClient().GetStringAsync("/Home/Both", Ct);
 
         Messages(html).ShouldBe(["From Notyf"]);
         Messages(html, "aspnetcorehero-toastify-data").ShouldBe(["From Toastify"]);
